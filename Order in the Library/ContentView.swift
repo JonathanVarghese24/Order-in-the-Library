@@ -42,7 +42,7 @@ struct ContentView: View {
                         }
                         .padding(.bottom, 10)
                         
-                        NavigationLink(destination: ContentView()) { // Replace InstructionsView() with GameView() when created
+                        NavigationLink(destination: InstructionsView()) { // Replace InstructionsView() with GameView() when created
                             Text("How to Play")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(width: 100)
@@ -68,15 +68,9 @@ struct ContentView: View {
                         Spacer()
                     }
                     .padding(.vertical, 50)
-                VStack {
-                    Image(systemName: "globe")
-                        .imageScale(.large)
-                        .foregroundStyle(.tint)
-                    Text("Hello, world!")
-                    NavigationLink("Game Instructions", destination: InstructionsView())
                 }
+                .navigationBarHidden(true)
             }
-            .navigationBarHidden(true)
         }
     }
 }
@@ -88,15 +82,25 @@ struct ContentView: View {
 struct InstructionsView: View {
     var body: some View {
         ZStack {
-            VStack(alignment: .leading, spacing: 20) {
+            Image("library")
+                .resizable()
+                .edgesIgnoringSafeArea(.all)
+                .blur(radius: 10)
+                .overlay(Color.black.opacity(0.3))
+            VStack(spacing: 20 ) {
                 Text("Game Instructions")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundColor(.white)
                     .padding()
-                Text(" 1) sort books by there decimal number from least to greatest, if the book is fiction sort the book by the authors last name")
-                Text(" 2) once you have sorted the books click the check books button to see if they are correct")
-                Text(" 3) all books will be randomly selected so levels will not be the exact same ")
-                Text(" 4) if needed there will be a check alphabet button to see the alphabet")
+                Text("1) Sort books by their decimal number from least to greatest. If the book is fiction, sort by the author's last name.")
+                    .foregroundColor(.white)
+                Text("2) Once you have sorted the books, click the 'Check Books' button to see if they are correct.")
+                    .foregroundColor(.white)
+                Text("3) All books will be randomly selected, so levels will not be exactly the same.")
+                    .foregroundColor(.white)
+                Text("4) If needed, there will be a 'Check Alphabet' button to view the alphabet.")
+                    .foregroundColor(.white)
                 Spacer()
             }
         }
