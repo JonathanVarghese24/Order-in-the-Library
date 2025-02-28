@@ -53,7 +53,7 @@ struct ContentView: View {
                         }
                         .padding(.bottom, 10)
                         
-                        NavigationLink(destination: ContentView()) { // Replace AboutView() with GameView() when created
+                        NavigationLink(destination: AboutView()) { // Replace AboutView() with GameView() when created
                             Text("About")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(width: 100)
@@ -100,6 +100,28 @@ struct InstructionsView: View {
                 Text("3) All books will be randomly selected, so levels will not be exactly the same.")
                     .foregroundColor(.white)
                 Text("4) If needed, there will be a 'Check Alphabet' button to view the alphabet.")
+                    .foregroundColor(.white)
+                Spacer()
+            }
+        }
+    }
+}
+
+struct AboutView: View {
+    var body: some View {
+        ZStack {
+            Image("library")
+                .resizable()
+                .edgesIgnoringSafeArea(.all)
+                .blur(radius: 10)
+                .overlay(Color.black.opacity(0.3))
+            VStack(spacing: 20) {
+                Text("About")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding()
+                Text("This app is meant to help train library volunteers so they can shelve books in proper order. It will assist them in sorting books using the Dewey Decimal Classification System and sorting by three letters of the author’s last name.")
                     .foregroundColor(.white)
                 Spacer()
             }
