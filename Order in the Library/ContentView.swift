@@ -31,7 +31,7 @@ struct ContentView: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: ContentView()) { // Replace ContentView() with GameView() when created
+                        NavigationLink(destination: GameView()) { // Replace ContentView() with GameView() when created
                             Text("Play")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(width: 100)
@@ -63,8 +63,6 @@ struct ContentView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.bottom, 10)
-                        
-                        
                         Spacer()
                     }
                     .padding(.vertical, 50)
@@ -115,7 +113,7 @@ struct AboutView: View {
                 .edgesIgnoringSafeArea(.all)
                 .blur(radius: 10)
                 .overlay(Color.black.opacity(0.3))
-            VStack(spacing: 20) {
+            VStack {
                 Text("About")
                     .font(.largeTitle)
                     .fontWeight(.bold)
