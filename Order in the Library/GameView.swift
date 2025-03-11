@@ -9,11 +9,13 @@ import SwiftUI
 
 struct GameView: View {
     @State private var isTextvisible: Bool = false
+    @State private var imagePositions: [CGFloat] = [100, 200, 300] // Positions of images in the x-axis
+    let imageNames = ["image1", "image2", "image3"] // place holder for book images
+    let yPosition: CGFloat = 400 // Set a constant y-position for all images
     var body: some View {
         ZStack {
             Image("library")
                 .resizable()
-                //.aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
                 .blur(radius: 5)
                 .overlay(Color.black.opacity(0.2))
@@ -41,6 +43,20 @@ struct GameView: View {
                         .transition(.slide)
                 }
                 Spacer()
+            }
+            ForEach(0..<imageNames.count, id: \.self) { index in
+                Image(imageNames[index])
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+                    .position(x: imagePositions[index], y: yPosition)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                // Update position only on x-axis
+                                imagePositions[index] = value.location.x
+                            }
+                    )
             }
         }
     }
