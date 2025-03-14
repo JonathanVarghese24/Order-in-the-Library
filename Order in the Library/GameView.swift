@@ -9,9 +9,8 @@ import SwiftUI
 
 struct GameView: View {
     @State private var isTextvisible: Bool = false
-    @State private var imagePositions: [CGFloat] = [100, 200, 300] // Positions of images in the x-axis
-    let imageNames = ["image1", "image2", "image3"] // place holder for book images
-    let yPosition: CGFloat = 400 // Set a constant y-position for all images
+    @State private var imageNames: [String] = ["image1", "image2", "image3"]
+    @State private var draggingItem: String?
     var body: some View {
         ZStack {
             Image("library")
@@ -44,19 +43,42 @@ struct GameView: View {
                 }
                 Spacer()
             }
-            ForEach(0..<imageNames.count, id: \.self) { index in
-                Image(imageNames[index])
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .position(x: imagePositions[index], y: yPosition)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                // Update position only on x-axis
-                                imagePositions[index] = value.location.x
+            let columns = Array(repeating: GridItem(spacing: 10), count: 3)
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(imageNames, id: \.self) { imageName in
+                    GeometryReader { geometry in
+                        let size = geometry.size
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: size.width, height: size.height)
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                            .draggable(imageName) {
+                                Image(imageName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: size.width, height: size.height)
+                                    .onAppear {
+                                        draggingItem = imageName
+                                    }
                             }
-                    )
+                            .dropDestination(for: String.self) { items, location in
+                                return false
+                            } isTargeted: { status in
+                                if let draggingItem, status, draggingItem != imageName {
+                                    if let sourceIndex = imageNames.firstIndex(of: draggingItem),
+                                       let destinationIndex = imageNames.firstIndex(of: imageName) {
+                                        withAnimation(.bouncy) {
+                                            let sourceItem = imageNames.remove(at: sourceIndex)
+                                            imageNames.insert(sourceItem, at: destinationIndex)
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+                .frame(height: 100)
             }
         }
     }
