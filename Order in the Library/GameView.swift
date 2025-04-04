@@ -11,6 +11,7 @@ struct GameView: View {
     @State private var isTextvisible: Bool = false
     @State private var imageNames: [String] = ["image1", "image2", "image3"]
     @State private var draggingItem: String?
+    @State private var resultMessage: String = ""
     var body: some View {
         ZStack {
             Image("library")
@@ -36,11 +37,15 @@ struct GameView: View {
                 }
                 .padding()
                 if isTextvisible {
-                    Text("A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z")
+                    Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
                         .foregroundColor(.white)
                         .font(.title)
                         .transition(.slide)
                 }
+                Text(resultMessage)
+                    .font(.title)
+                    .foregroundColor(.white)
+                    .padding()
                 Spacer()
             }
             let columns = Array(repeating: GridItem(spacing: 10), count: 3)
@@ -80,6 +85,36 @@ struct GameView: View {
                 }
                 .frame(height: 100)
             }
+            Button(action: checkOrder) {
+                Text("Check Order")
+                    .padding()
+                    .frame(maxWidth: 200)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(15)
+                    .shadow(radius: 5)
+                    .font(.headline)
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom) // Moves button to bottom
+               .padding()
+        }
+        .onAppear {
+            shuffleImages()
+        }
+    }
+    private func shuffleImages() {
+        var shuffledImages = imageNames
+        repeat {
+            shuffledImages.shuffle()
+        } while shuffledImages == ["image1", "image2", "image3"]
+        imageNames = shuffledImages
+    }
+    
+    private func checkOrder() {
+        if imageNames == ["image1", "image2", "image3"] {
+            resultMessage = "you win"
+        } else {
+            resultMessage = "try again"
         }
     }
 }
