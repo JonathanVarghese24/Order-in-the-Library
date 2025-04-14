@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0D6FC2172DA419100020BBA7 /* Books.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6FC2162DA419100020BBA7 /* Books.swift */; };
+		0D6FC2192DA41B070020BBA7 /* BookData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6FC2182DA41B070020BBA7 /* BookData.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B2650A062D6CCDB800F923D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D6FC2162DA419100020BBA7 /* Books.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Books.swift; sourceTree = "<group>"; };
+		0D6FC2182DA41B070020BBA7 /* BookData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookData.swift; sourceTree = "<group>"; };
 		B26509F52D6CCDB700F923D8 /* Order in the Library.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Order in the Library.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2650A052D6CCDB800F923D8 /* Order in the LibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Order in the LibraryTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2650A0F2D6CCDB800F923D8 /* Order in the LibraryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Order in the LibraryUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +82,8 @@
 		B26509EC2D6CCDB700F923D8 = {
 			isa = PBXGroup;
 			children = (
+				0D6FC2162DA419100020BBA7 /* Books.swift */,
+				0D6FC2182DA41B070020BBA7 /* BookData.swift */,
 				B26509F72D6CCDB700F923D8 /* Order in the Library */,
 				B2650A082D6CCDB800F923D8 /* Order in the LibraryTests */,
 				B2650A122D6CCDB800F923D8 /* Order in the LibraryUITests */,
@@ -236,6 +245,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D6FC2192DA41B070020BBA7 /* BookData.swift in Sources */,
+				0D6FC2172DA419100020BBA7 /* Books.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
