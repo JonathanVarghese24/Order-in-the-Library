@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct GameView: View {
-    @State private var isTextvisible: Bool = false
-    @State private var imageNames: [String] = ["image1", "image2", "image3"]
+    @State private var isTextvisible = false
+    @State private var imageNames: [String] = sampleBooks
+        .prefix(3)            // take the first three books
+        .map(\.imageName)     // extract their imageName
     @State private var draggingItem: String?
-    @State private var resultMessage: String = ""
+    @State private var resultMessage = ""
+
     var body: some View {
         ZStack {
             Image("library")
@@ -19,10 +22,12 @@ struct GameView: View {
                 .edgesIgnoringSafeArea(.all)
                 .blur(radius: 5)
                 .overlay(Color.black.opacity(0.2))
+
             VStack(spacing: 10) {
                 Text("Play")
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.white)
+
                 Button(action: {
                     isTextvisible.toggle()
                 }) {
@@ -36,18 +41,22 @@ struct GameView: View {
                         .font(.headline)
                 }
                 .padding()
+
                 if isTextvisible {
                     Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
                         .foregroundColor(.white)
                         .font(.title)
                         .transition(.slide)
                 }
+
                 Text(resultMessage)
                     .font(.title)
                     .foregroundColor(.white)
                     .padding()
+
                 Spacer()
             }
+
             let columns = Array(repeating: GridItem(spacing: 10), count: 3)
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(imageNames, id: \.self) { imageName in
@@ -68,23 +77,24 @@ struct GameView: View {
                                         draggingItem = imageName
                                     }
                             }
-                            .dropDestination(for: String.self) { items, location in
-                                return false
+                            .dropDestination(for: String.self) { _, _ in
+                                false
                             } isTargeted: { status in
                                 if let draggingItem, status, draggingItem != imageName {
-                                    if let sourceIndex = imageNames.firstIndex(of: draggingItem),
-                                       let destinationIndex = imageNames.firstIndex(of: imageName) {
+                                    if let from = imageNames.firstIndex(of: draggingItem),
+                                       let to = imageNames.firstIndex(of: imageName) {
                                         withAnimation(.bouncy) {
-                                            let sourceItem = imageNames.remove(at: sourceIndex)
-                                            imageNames.insert(sourceItem, at: destinationIndex)
+                                            let moved = imageNames.remove(at: from)
+                                            imageNames.insert(moved, at: to)
                                         }
                                     }
                                 }
                             }
                     }
+                    .frame(height: 100)
                 }
-                .frame(height: 100)
             }
+
             Button(action: checkOrder) {
                 Text("Check Order")
                     .padding()
@@ -95,23 +105,24 @@ struct GameView: View {
                     .shadow(radius: 5)
                     .font(.headline)
             }
-            .frame(maxHeight: .infinity, alignment: .bottom) // Moves button to bottom
-               .padding()
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .padding()
         }
         .onAppear {
             shuffleImages()
         }
     }
+
     private func shuffleImages() {
-        var shuffledImages = imageNames
+        var shuffled = imageNames
         repeat {
-            shuffledImages.shuffle()
-        } while shuffledImages == ["image1", "image2", "image3"]
-        imageNames = shuffledImages
+            shuffled.shuffle()
+        } while shuffled == imageNames
+        imageNames = shuffled
     }
-    
+
     private func checkOrder() {
-        if imageNames == ["image1", "image2", "image3"] {
+        if imageNames == sampleBooks.prefix(3).map(\.imageName) {
             resultMessage = "you win"
         } else {
             resultMessage = "try again"

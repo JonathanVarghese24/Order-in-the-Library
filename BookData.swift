@@ -8,14 +8,14 @@
 import Foundation
 
 let sampleBooks: [Books] = [
-    Books(imageName: "", authorLastName: "WAT", deweyDecimal: "001.3"), //Everything Is Obvious
-    Books(imageName: "", authorLastName: "MIT", deweyDecimal: "006.3"), //Artificial Intelligence
-    Books(imageName: "", authorLastName: "GAA", deweyDecimal: "100"), //Sophie's World
-    Books(imageName: "", authorLastName: "BAG", deweyDecimal: "128.2"), //How to Think Like a Philosopher
-    Books(imageName: "", authorLastName: "KAH", deweyDecimal: "150"), //Thinking, Fast and Slow
-    Books(imageName: "", authorLastName: "SCH", deweyDecimal: "153.42"), //The Paradox of Choice
-    Books(imageName: "", authorLastName: "TOL", deweyDecimal: "158.1"), //The Power of Now
-    Books(imageName: "", authorLastName: "PIN", deweyDecimal: "401"), //The Language Instinct
+    Books(imageName: "WAT", authorLastName: "WAT", deweyDecimal: "001.3"), //Everything Is Obvious
+    Books(imageName: "MIT", authorLastName: "MIT", deweyDecimal: "006.3"), //Artificial Intelligence
+    Books(imageName: "GAA", authorLastName: "GAA", deweyDecimal: "100"), //Sophie's World
+    Books(imageName: "BAG", authorLastName: "BAG", deweyDecimal: "128.2"), //How to Think Like a Philosopher
+    Books(imageName: "KAH", authorLastName: "KAH", deweyDecimal: "150"), //Thinking, Fast and Slow
+    Books(imageName: "SCH", authorLastName: "SCH", deweyDecimal: "153.42"), //The Paradox of Choice
+    Books(imageName: "TOL", authorLastName: "TOL", deweyDecimal: "158.1"), //The Power of Now
+    Books(imageName: "PIN", authorLastName: "PIN", deweyDecimal: "401"), //The Language Instinct
     Books(imageName: "", authorLastName: "DEU", deweyDecimal: "415"), // The Unfolding of Language
     Books(imageName: "", authorLastName: "ABB", deweyDecimal: "516.3"), //Flatland
     Books(imageName: "", authorLastName: "SAG", deweyDecimal: "520"), //Cosmos
