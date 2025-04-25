@@ -44,6 +44,7 @@ struct GameView: View {
                         .font(.headline)
                 }
                 .padding()
+
                 Picker("Select Difficulty", selection: $selectedDifficulty) {
                     ForEach(difficultyLevels.keys.sorted(), id: \.self) { level in
                         Text(level).tag(level)
@@ -55,58 +56,62 @@ struct GameView: View {
                     imageNames = sampleBooks.prefix(numberOfBooks).map(\.imageName)
                     shuffleImages()
                 }
+
                 if isTextvisible {
                     Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
                         .foregroundColor(.white)
                         .font(.system(size: 12, weight: .heavy))
                         .transition(.slide)
                 }
+
                 Text(resultMessage)
-                    .font(.system(size: 14, weight: .heavy))
+                    .font(.system(size: 12, weight: .heavy))
                     .foregroundColor(.white)
                     .padding()
-                Spacer()
-            }
-            ScrollView {
-                let columns = Array(repeating: GridItem(spacing: 10), count: 3)
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(imageNames, id: \.self) { imageName in
-                        GeometryReader { geometry in
-                            let size = geometry.size
-                            Image(imageName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: size.width, height: size.height)
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                                .draggable(imageName) {
-                                    Image(imageName)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: size.width, height: size.height)
-                                        .onAppear {
-                                            draggingItem = imageName
-                                        }
-                                }
-                                .dropDestination(for: String.self) { _, _ in
-                                    false
-                                } isTargeted: { status in
-                                    if let draggingItem, status, draggingItem != imageName {
-                                        if let from = imageNames.firstIndex(of: draggingItem),
-                                           let to = imageNames.firstIndex(of: imageName) {
-                                            withAnimation(.bouncy) {
-                                                let moved = imageNames.remove(at: from)
-                                                imageNames.insert(moved, at: to)
+
+                ScrollView {
+                    let columns = Array(repeating: GridItem(spacing: 10), count: 3)
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(imageNames, id: \.self) { imageName in
+                            GeometryReader { geometry in
+                                let size = geometry.size
+                                Image(imageName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: size.width, height: size.height)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                    .draggable(imageName) {
+                                        Image(imageName)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: size.width, height: size.height)
+                                            .onAppear {
+                                                draggingItem = imageName
+                                            }
+                                    }
+                                    .dropDestination(for: String.self) { _, _ in
+                                        false
+                                    } isTargeted: { status in
+                                        if let draggingItem, status, draggingItem != imageName {
+                                            if let from = imageNames.firstIndex(of: draggingItem),
+                                               let to = imageNames.firstIndex(of: imageName) {
+                                                withAnimation(.bouncy) {
+                                                    let moved = imageNames.remove(at: from)
+                                                    imageNames.insert(moved, at: to)
+                                                }
                                             }
                                         }
                                     }
-                                }
+                            }
+                            .frame(height: 100)
                         }
-                        .frame(height: 100)
                     }
                 }
+                .frame(maxHeight: 200)
+                .padding(.top, 50)
+                Spacer()
             }
-            .frame(maxHeight: 200)
 
             Button(action: checkOrder) {
                 Text("Check Order")
@@ -138,9 +143,9 @@ struct GameView: View {
     private func checkOrder() {
         let correctOrder = sampleBooks.prefix(numberOfBooks).map(\.imageName)
         if imageNames == correctOrder {
-            resultMessage = "You win!"
+            resultMessage = "Good Job! You Sorted the Books Correctly"
         } else {
-            resultMessage = "Try again."
+            resultMessage = "Close! Look at the Dewey Decimal Numbers and try again. "
         }
     }
 }
