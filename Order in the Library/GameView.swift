@@ -45,12 +45,12 @@ struct GameView: View {
                 if isTextvisible {
                     Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
                         .foregroundColor(.white)
-                        .font(.title)
+                        .font(.system(size: 12, weight: .heavy))
                         .transition(.slide)
                 }
 
                 Text(resultMessage)
-                    .font(.title)
+                    .font(.system(size: 14, weight: .heavy))
                     .foregroundColor(.white)
                     .padding()
 
@@ -123,9 +123,9 @@ struct GameView: View {
 
     private func checkOrder() {
         if imageNames == sampleBooks.prefix(3).map(\.imageName) {
-            resultMessage = "you win"
+            resultMessage = "Congratulations! You Sorted the Books Correctly!"
         } else {
-            resultMessage = "try again"
+            resultMessage = "Check the order the of Dewey Decimal Numbers"
         }
     }
 }
