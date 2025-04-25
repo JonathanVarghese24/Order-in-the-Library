@@ -106,7 +106,7 @@ struct GameView: View {
                     }
                 }
             }
-            .frame(maxHeight: 300)
+            .frame(maxHeight: 200)
 
             Button(action: checkOrder) {
                 Text("Check Order")
