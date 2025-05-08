@@ -8,15 +8,24 @@
 import SwiftUI
 
 struct GameView: View {
-    @State private var isTextvisible = false
-    @State private var imageNames: [String] = []
-    @State private var draggingItem: String?
+    let difficulty: Int
+
+    @State private var selectedBooks: [Books] = []
+    @State private var selectedIndex: Int? = nil    //Checks which book is selected. Starts as null so that no books start as selected
     @State private var resultMessage = ""
-    @State private var selectedDifficulty: String = "Easy"
-    var numberOfBooks: Int {
-        difficultyLevels[selectedDifficulty] ?? 5
+    @State private var isTextVisible = false
+    @Environment(\.verticalSizeClass) private var verticalSizeClass    //Helps to check if the device is in portrait or landscape
+
+    private var numberOfBooks: Int {    // Controls how many books are shown, cases correspond to difficulty
+        switch difficulty {
+        case 2: return 5
+        case 3: return 8
+        default: return 3
+        }
     }
-    let difficultyLevels = ["Easy": 5, "Medium": 12, "Hard": 25]
+    private var isPortrait: Bool {     // Returns true if the app is in portrait mode, false if it is in landscape
+        verticalSizeClass == .regular
+    }
 
     var body: some View {
         ZStack {
@@ -24,132 +33,119 @@ struct GameView: View {
                 .resizable()
                 .edgesIgnoringSafeArea(.all)
                 .blur(radius: 5)
-                .overlay(Color.black.opacity(0.2))
+                .overlay(Color.black.opacity(0.4))
 
-            VStack(spacing: 10) {
-                Text("Play")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
-
-                Button(action: {
-                    isTextvisible.toggle()
-                }) {
-                    Text(isTextvisible ? "Hide Alphabet" : "Show Alphabet")
-                        .padding()
-                        .frame(maxWidth: 200)
-                        .background(isTextvisible ? Color.red : Color.green)
+            VStack(spacing: 16) {
+                if isPortrait {
+                    Text("Play")
+                        .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.white)
-                        .cornerRadius(15)
-                        .shadow(radius: 5)
-                        .font(.headline)
-                }
-                .padding()
 
-                Picker("Select Difficulty", selection: $selectedDifficulty) {
-                    ForEach(difficultyLevels.keys.sorted(), id: \.self) { level in
-                        Text(level).tag(level)
+                    Button(action: {
+                        isTextVisible.toggle()
+                    }) {
+                        Text(isTextVisible ? "Hide Alphabet" : "Show Alphabet")
+                            .padding()
+                            .frame(maxWidth: 200)
+                            .background(isTextVisible ? Color.red : Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                            .shadow(radius: 5)
+                            .font(.headline)
                     }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                .onChange(of: selectedDifficulty) {
-                    imageNames = sampleBooks.prefix(numberOfBooks).map(\.imageName)
-                    shuffleImages()
-                }
+                    .padding()
 
-                if isTextvisible {
-                    Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
+                    Text("Difficulty: \(difficulty)")
                         .foregroundColor(.white)
-                        .font(.system(size: 12, weight: .heavy))
-                        .transition(.slide)
+                        .font(.headline)
+
+                    if isTextVisible {
+                        Text("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z")
+                            .foregroundColor(.white)
+                            .font(.system(size: 12, weight: .heavy))
+                            .transition(.slide)
+                    }
                 }
 
                 Text(resultMessage)
-                    .font(.system(size: 12, weight: .heavy))
+                    .font(.headline)
                     .foregroundColor(.white)
-                    .padding()
+                    .padding(.top)
 
-                ScrollView {
-                    let columns = Array(repeating: GridItem(spacing: 10), count: 3)
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(imageNames, id: \.self) { imageName in
-                            GeometryReader { geometry in
-                                let size = geometry.size
-                                Image(imageName)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: size.width, height: size.height)
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                                    .draggable(imageName) {
-                                        Image(imageName)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: size.width, height: size.height)
-                                            .onAppear {
-                                                draggingItem = imageName
-                                            }
-                                    }
-                                    .dropDestination(for: String.self) { _, _ in
-                                        false
-                                    } isTargeted: { status in
-                                        if let draggingItem, status, draggingItem != imageName {
-                                            if let from = imageNames.firstIndex(of: draggingItem),
-                                               let to = imageNames.firstIndex(of: imageName) {
-                                                withAnimation(.bouncy) {
-                                                    let moved = imageNames.remove(at: from)
-                                                    imageNames.insert(moved, at: to)
-                                                }
-                                            }
-                                        }
-                                    }
-                            }
-                            .frame(height: 100)
+                HStack(spacing: 20) {
+                    ForEach(selectedBooks.indices, id: \.self) { index in
+                        Button(action: { bookTapped(at: index) }) {
+                            Image(selectedBooks[index].imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(8)
+                                .shadow(radius: 4)
+                                .overlay(
+                                    // Highlight the selected book
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(
+                                            selectedIndex == index ? Color.yellow : Color.clear,
+                                            lineWidth: 3
+                                        )
+                                )
                         }
+                        .frame(height: 120)
                     }
                 }
-                .frame(maxHeight: 200)
-                .padding(.top, 50)
-                Spacer()
-            }
 
-            Button(action: checkOrder) {
-                Text("Check Order")
-                    .padding()
-                    .frame(maxWidth: 200)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-                    .shadow(radius: 5)
-                    .font(.headline)
+                Spacer()
+
+                Button(action: checkOrder) {
+                    Text("Check Order")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: 200)
+                        .background(Color.blue)
+                        .cornerRadius(12)
+                        .shadow(radius: 5)
+                }
+                .padding(.bottom)
             }
-            .frame(maxHeight: .infinity, alignment: .bottom)
-            .padding()
         }
-        .onAppear {
-            imageNames = sampleBooks.prefix(numberOfBooks).map(\.imageName)
-            shuffleImages()
+        .onAppear { //when GameView appears, picks random books from the array of books
+            selectedBooks = Array(sampleBooks.shuffled().prefix(numberOfBooks))
+            shuffleBooks()
         }
     }
 
-    private func shuffleImages() {
-        var shuffled = imageNames
+    private func bookTapped(at index: Int) { //function that helps swap books
+        if let first = selectedIndex {
+            withAnimation(.easeInOut) {
+                selectedBooks.swapAt(first, index) //swaps positions of two books tapped
+            }
+            selectedIndex = nil // unselects book by turning the @State variable null again
+            resultMessage = ""
+        } else {
+            // Otherwise, store this book's index as the first selection
+            selectedIndex = index
+        }
+    }
+
+    private func shuffleBooks() {
+        var shuffled = selectedBooks
         repeat {
             shuffled.shuffle()
-        } while shuffled == imageNames
-        imageNames = shuffled
+        } while shuffled == selectedBooks
+        selectedBooks = shuffled
     }
 
     private func checkOrder() {
-        let correctOrder = sampleBooks.prefix(numberOfBooks).map(\.imageName)
-        if imageNames == correctOrder {
-            resultMessage = "Good Job! You Sorted the Books Correctly"
-        } else {
-            resultMessage = "Close! Look at the Dewey Decimal Numbers and try again. "
-        }
+        let isCorrect = zip(selectedBooks, selectedBooks.sorted {
+            (Double($0.deweyDecimal) ?? 0) < (Double($1.deweyDecimal) ?? 0) // Convert deweyDecimal from String to Double to compare numerical values
+        }).allSatisfy { $0.imageName == $1.imageName }
+
+        resultMessage = isCorrect
+            ? "Good Job! You Sorted the Books Correctly"
+            : "Close! Look at the Dewey Decimal Numbers and try again."
     }
 }
 
 #Preview {
-    GameView()
+    GameView(difficulty: 1)
 }
