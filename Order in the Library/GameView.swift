@@ -159,7 +159,7 @@ struct GameView: View {
         ? "Good Job! You Sorted the Books Correctly"
         : "Close! Look at the Dewey Decimal Numbers and try again."
         
-        if isCorrect && difficulty == 3 { // Assuming 3 = "Hard"
+        if isCorrect && difficulty == 3 {
             navigateToCertificate = true
         }
     }
